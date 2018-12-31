@@ -4,13 +4,18 @@
     "password": null,
     "database": "hatch_development",
     "host": "127.0.0.1",
+    "port": 5432,
     "dialect": "postgres"
   },
+  "development": {
+  "use_env_variable": "postgres://zytcazom:TKjCbPK87jJdVmNy1hGuadfVKt9fMlcw@baasu.db.elephantsql.com:5432/zytcazom"
+},
   "test": {
     "username": "hatch_admin",
     "password": null,
     "database": "hatch_test",
     "host": "127.0.0.1",
+    "port": 5432,
     "dialect": "postgres"
   },
   "production": {
@@ -18,6 +23,7 @@
     "password": null,
     "database": "hatch_production",
     "host": "127.0.0.1",
+    "port": 5432,
     "dialect": "postgres"
   }
 }
