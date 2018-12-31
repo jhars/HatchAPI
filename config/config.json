@@ -8,7 +8,8 @@
     "dialect": "postgres"
   },
   "development": {
-  "use_env_variable": "postgres://zytcazom:TKjCbPK87jJdVmNy1hGuadfVKt9fMlcw@baasu.db.elephantsql.com:5432/zytcazom"
+  "use_env_variable": "postgres://zytcazom:TKjCbPK87jJdVmNy1hGuadfVKt9fMlcw@baasu.db.elephantsql.com:5432/zytcazom",
+  "password": "password"
 },
   "test": {
     "username": "hatch_admin",
