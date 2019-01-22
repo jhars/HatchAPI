@@ -1,4 +1,6 @@
 const User = require('../models').User;
+const sms = require('../services/send_sms');
+const client = require('twilio')(sms.sid, sms.token);
 
 module.exports = {
 
@@ -8,7 +10,23 @@ module.exports = {
         first_name: req.body.first_name,
         phone_number: req.body.phone_number,
       })
-      .then(user => res.status(201).send(user))
+      .then(user => {
+        console.log('client goes here');
+        const pin = Math.random();
+        const pinString = pin.toString();
+        const lastFour = pinString.substr(-4);
+        console.log("CL: ==>> : "+ lastFour);
+
+        client.messages
+        .create({
+           body: 'FOREST, FOREST  ..!?',
+           from: '+18654194204',
+           to: '+12484449837'
+         })
+        .then(message => console.log(message.sid))
+        .done()
+        res.status(201).send(user)
+      })
       .catch(error => res.status(400).send(error));
   },
 
@@ -39,6 +57,7 @@ module.exports = {
           .catch(error => res.status(402).send(error));
       })
   },
+
   destroy (req, res) {
     return User
       .find({
@@ -52,7 +71,6 @@ module.exports = {
             message: 'User not found.'
           })
         }
-
         return user
           .destroy()
           .then(() => res.status(204).send())
@@ -60,6 +78,7 @@ module.exports = {
       })
       .catch(error => res.status(401).send(error));
   },
+
   list(req, res) {
     return User
       .all()
