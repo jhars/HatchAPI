@@ -21,7 +21,11 @@ module.exports = {
 
   update (req, res) {
     return User
-      .findById(req.params.user_id)
+      .find({
+        where: {
+          id: req.params.user_id
+        }
+      })
       .then(user => {
         if (!user) {
           return res.status(404).send({
