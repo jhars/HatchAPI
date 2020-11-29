@@ -1,33 +1,53 @@
 const User = require('../models').User;
 const sms = require('../services/send_sms');
 const client = require('twilio')(sms.sid, sms.token);
+const token = require('../services/auth_crypt');
+const bcrypt = require('bcrypt');
 
 module.exports = {
 
-  create(req, res) {
-    return User
-      .create({
-        first_name: req.body.first_name,
-        phone_number: req.body.phone_number,
-      })
-      .then(user => {
-        console.log('client goes here');
-        const pin = Math.random();
-        const pinString = pin.toString();
-        const lastFour = pinString.substr(-4);
-        console.log("CL: ==>> : "+ lastFour);
+  async login(req, res) {
+    try {
+      const user = await User.findOne({ where: { email: req.body.email } })
+      const userEnteredPassword = req.body.password;
+      await bcrypt.compare(userEnteredPassword, user.password, function(err, result) {
+        if (result == true) {
+          res.status(200).send("authorized")
+        } else {
+          console.log("invalid password")
+          res.status(401).send(err)
+        }
+      });
 
-        client.messages
-        .create({
-           body: 'FOREST, FOREST  ..!?',
-           from: '+18654194204',
-           to: '+12484449837'
-         })
-        .then(message => console.log(message.sid))
-        .done()
-        res.status(201).send(user)
+    } catch (error) {
+      console.log("in catch block")
+      res.status(400).send(error)
+    }
+  },
+
+  async create(req, res) {
+    try {
+      // Generate a salt
+      const salt = await bcrypt.genSalt(10);
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      const user = await User.create({
+        email: req.body.email,
+        first_name: req.body.first_name,
+        password: hashedPassword,
+        phone_number: req.body.phone_number,
+        random_field: req.body.random_field,
       })
-      .catch(error => res.status(400).send(error));
+    await res.status(201).send(user)
+    return user
+
+  } catch (error) {
+      console.log(error);
+      res.status(400).send(error)
+  }
+  // Return null if error
+  return null;
   },
 
   read(req, res) {
@@ -57,7 +77,6 @@ module.exports = {
           .catch(error => res.status(402).send(error));
       })
   },
-
   destroy (req, res) {
     return User
       .find({

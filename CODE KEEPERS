@@ -1,0 +1,17 @@
+
+
+
+        // const pin = Math.random();
+        // const pinString = pin.toString();
+        // const lastFour = pinString.substr(-4);
+        // console.log("CL: ==>> : "+ lastFour);
+        // const phone = user.phone_number
+
+        // client.messages
+        // .create({
+        //    body: 'Hello, ' + user.first_name,
+        //    from: '+12058464703',
+        //    to: phone
+        //  })
+        // .then(message => console.log(message.sid))
+        // .done()

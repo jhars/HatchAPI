@@ -1,12 +1,38 @@
 const bcrypt = require('bcrypt');
 
-bcrypt.hash('myPassword', 10, function(err, hash) {
-  //Store hash in database
-  console.log(hash);
-  console.log(err);
+function hash(password) {
+  bcrypt.hash(password, 10, function(err, hash) {
+
+    if (!err) {
+      //Store hash in database
+      console.log("======= HASH ========");
+      console.log(hash);
+      return hash
+    } else {
+        console.log(err);
+    }
+
+  });
+
+  // return hash
+}
+
+function salt(hash) {
+  const key = "key 01"
+  return hash
+}
+
+module.exports = {
+
+  tokenize(password) {
+    return salt(hash(password))
+  }
+
+};
 
 
-});
+
+
 
 
 // bcrypt.compare('somePassword', hash, function(err, res) {

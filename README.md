@@ -13,7 +13,27 @@
 ## NOTES:
 
 ADD COLUMN TO TABLE:
-sequelize migration:create --name Users
+sequelize migration:create --name AddPasswordKey
+sequelize migration:create --name AddRandomField
+
+ALTER TABLE users
+ADD COLUMN password string;
+
+SELECT *
+FROM users;
+
+
+$ sequelize db:drop
+$ sequelize db:create
+$ sequelize db:migrate
+
+//creates migration filed with name
+$ sequelize migration:create --name AddRandomField
+
+//modify ^new^ migration file, add table and column info (see other files fro reference)
+. 
+$ sequelize db:migrate
+
 
 
 
