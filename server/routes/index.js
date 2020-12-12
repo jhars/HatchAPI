@@ -14,5 +14,7 @@ module.exports = (app) => {
 
   //AUTH
   app.post('/api/user/login', usersController.login);
+  app.post('/api/user/sendTwoFactorCode', usersController.sendTwoFactorCode);
+  app.post('/api/user/confirm/phone', usersController.confirmPhone);
 
 };

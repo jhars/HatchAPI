@@ -1,10 +1,53 @@
 const User = require('../models').User;
-const sms = require('../services/send_sms');
-const client = require('twilio')(sms.sid, sms.token);
-const token = require('../services/auth_crypt');
+const sms = require('../services/send_sms');  
+const client = require('twilio')(sms.sid, sms.token)
+const token = require('../services/auth_crypt');  
 const bcrypt = require('bcrypt');
 
 module.exports = {
+
+  async confirmPhone(req, res) {
+    try {
+      const phone = req.body.phone
+      console.log(`code: ${req.body.code}`)
+      const code = req.body.code
+      const user = await User.findOne({ where: { phone_number: phone } })
+      console.log(`user: ${user}`)
+
+      if (user.temp_code == req.body.code) {
+        console.log("Confirmation!")
+        res.status(200).send("success")
+      } else {
+        res.status(401).send("UNAUTHORIZED - code does not match")
+      }
+
+
+
+    } catch (error) {
+      console.log("Phone Number Confirmation Error")
+      res.status(399).send(error)
+    }
+  },
+
+  async sendTwoFactorCode(req, res) {
+    const code = "123456"
+    try {
+      client.messages.create({
+        body: code,
+        from: '+12056977892',
+        to: req.body.phone
+      })
+      console.log("= = = MESSAGE SENT = = = = ")
+      const user = await User.findOne({ where: { phone_number: req.body.phone } })
+      console.log("= = = USER FOUND = = = = ")
+      
+      await user.update({ temp_code: code })
+      console.log("= = = = = = = ")
+      res.status(200).send("succes")
+    } catch(error) {
+      res.status(400).send(error)
+    }
+  },
 
   async login(req, res) {
     try {
@@ -19,9 +62,10 @@ module.exports = {
         }
       });
 
+
     } catch (error) {
       console.log("in catch block")
-      res.status(400).send(error)
+      res.status(400).send("AUTHORIZATION ERROR")
     }
   },
 
